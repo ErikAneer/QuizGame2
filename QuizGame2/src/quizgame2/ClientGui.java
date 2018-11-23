@@ -3,6 +3,7 @@ package quizgame2;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,7 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-public class ClientGui extends JFrame implements ActionListener{
+public class QuizSwingTest extends JFrame implements ActionListener {
+
+
+    String savedUserName;
 
     // Panels
     JPanel panelStartScene = new JPanel();
@@ -24,6 +28,7 @@ public class ClientGui extends JFrame implements ActionListener{
     JButton startPlayBtn = new JButton("Play!");
     JLabel startInputLbl = new JLabel("Username: ");
     JTextField startInputFld = new JTextField(20);
+    JLabel startHeaderLbl = new JLabel("Quiz Game");
 
     // WaitScene
     JLabel waitMessageLbl = new JLabel("Waiting for new player to join...");
@@ -63,27 +68,34 @@ public class ClientGui extends JFrame implements ActionListener{
 
 
     public void showStartScene() {
+        remove(panelEndScene);
         panelStartScene.add(startInputLbl);
         panelStartScene.add(startInputFld);
         panelStartScene.add(startPlayBtn);
         startPlayBtn.addActionListener(this);
+        panelStartScene.add(startHeaderLbl);
 
         add(panelStartScene);
-        panelStartScene.setBackground(java.awt.Color.red);
+        //panelStartScene.setBackground(Color.getHSBColor(10, 30, 60));
 
         gui();
     }
 
     public void showWaitScene() {
+        remove(panelStartScene);
         panelWaitScene.add(waitMessageLbl);
 
         add(panelWaitScene);
-        panelWaitScene.setBackground(Color.GREEN);
+        //panelWaitScene.setBackground(Color.getHSBColor(10, 30, 60));
 
         gui();
     }
 
     public void showCategoryScene() {
+        remove(panelWaitScene);
+        remove(panelScoreScene);
+        remove(panelQuestionScene);
+        remove(panelStartScene);
         panelCategoryScene.add(categoryMessageLbl);
         panelCategoryScene.add(categoryBtn1);
         categoryBtn1.addActionListener(this);
@@ -99,12 +111,14 @@ public class ClientGui extends JFrame implements ActionListener{
         categoryBtn6.addActionListener(this);
 
         add(panelCategoryScene);
-        panelCategoryScene.setBackground(Color.YELLOW);
+        //panelCategoryScene.setBackground(Color.getHSBColor(10, 30, 60));
 
         gui();
     }
 
     public void showQuestionScene() {
+        remove(panelCategoryScene);
+        remove(panelScoreScene);
         panelQuestionScene.add(questionMessageLbl);
         panelQuestionScene.add(questionAnswerBtn1);
         questionAnswerBtn1.addActionListener(this);
@@ -116,12 +130,13 @@ public class ClientGui extends JFrame implements ActionListener{
         questionAnswerBtn4.addActionListener(this);
 
         add(panelQuestionScene);
-        panelQuestionScene.setBackground(Color.ORANGE);
+        //panelQuestionScene.setBackground(Color.getHSBColor(10, 30, 60));
 
         gui();
     }
 
     public void showScoreScene() {
+        remove(panelQuestionScene);
         panelScoreScene.add(scoreHeaderLbl);
         panelScoreScene.add(scoreNamePlayer1);
         panelScoreScene.add(scoreScorePlayer1);
@@ -132,12 +147,14 @@ public class ClientGui extends JFrame implements ActionListener{
 
 
         add(panelScoreScene);
-        panelScoreScene.setBackground(Color.gray);
+        //panelScoreScene.setBackground(Color.getHSBColor(10, 30, 60));
 
         gui();
     }
 
     public void showEndScene() {
+        remove(panelQuestionScene);
+        remove(panelScoreScene);
         panelEndScene.add(endMessageLbl);
         panelEndScene.add(endNamePlayer1);
         panelEndScene.add(endScorePlayer1);
@@ -149,13 +166,15 @@ public class ClientGui extends JFrame implements ActionListener{
         endExitGameBtn.addActionListener(this);
 
         add(panelEndScene);
-        panelEndScene.setBackground(Color.magenta);
-
+        //panelEndScene.setBackground(Color.getHSBColor(10, 30, 60));
+        repaint();
+        revalidate();
         gui();
     }
 
 
     public void gui() {
+
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -166,38 +185,47 @@ public class ClientGui extends JFrame implements ActionListener{
 
     public void actionPerformed (ActionEvent e) {
 
-        if (e.getSource() == startPlayBtn) { System.out.println("testing");}
+        if (e.getSource() == startPlayBtn) {
+            savedUserName = startInputFld.getText();
+            showWaitScene();
+        }
 
-        else if(e.getSource() == categoryBtn1) {System.out.println("testing"); }
+        else if(e.getSource() == categoryBtn1) {  }
 
-        else if(e.getSource() == categoryBtn2) {System.out.println("testing");}
+        else if(e.getSource() == categoryBtn2) { }
 
-        else if(e.getSource() == categoryBtn3) {System.out.println("testing");}
+        else if(e.getSource() == categoryBtn3) { }
 
-        else if(e.getSource() == categoryBtn4) {System.out.println("testing"); }
+        else if(e.getSource() == categoryBtn4) { }
 
-        else if(e.getSource() == categoryBtn5) {System.out.println("testing");}
+        else if(e.getSource() == categoryBtn5) { }
 
-        else if(e.getSource() == categoryBtn6) {System.out.println("testing");}
+        else if(e.getSource() == categoryBtn6) { }
 
-        else if(e.getSource() == questionAnswerBtn1) { System.out.println("testing");}
+        else if(e.getSource() == questionAnswerBtn1) { }
 
-        else if(e.getSource() == questionAnswerBtn2) {System.out.println("testing");}
+        else if(e.getSource() == questionAnswerBtn2) { }
 
-        else if(e.getSource() == questionAnswerBtn3) { System.out.println("testing");}
+        else if(e.getSource() == questionAnswerBtn3) { }
 
-        else if(e.getSource() == questionAnswerBtn4) {System.out.println("testing"); }
+        else if(e.getSource() == questionAnswerBtn4) { }
 
-        else if(e.getSource() == scoreContinueBtn) { System.out.println("testing"); }
+        else if(e.getSource() == scoreContinueBtn) {
+            showCategoryScene();
+        }
 
-        else if(e.getSource() == endNewGameBtn) {System.out.println("testing");}
+        else if(e.getSource() == endNewGameBtn) {
+            showStartScene();
+        }
 
-        else if(e.getSource() == endExitGameBtn) {System.out.println("testing");}
+        else if(e.getSource() == endExitGameBtn) {
+            System.exit(0);
+        }
 
     }
 
     public static void main(String[] args) {
-        ClientGui launch = new ClientGui();
+        QuizSwingTest launch = new QuizSwingTest();
         launch.showStartScene();
     }
 
