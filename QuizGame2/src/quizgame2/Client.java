@@ -1,7 +1,5 @@
 
 package quizgame2;
-package quizgame2;
-
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -35,4 +33,8 @@ public class Client   {
             ex.printStackTrace();
         }
     }
-}}
+
+    public static void main(String[] args){
+        System.out.println("hej");
+    }
+}
