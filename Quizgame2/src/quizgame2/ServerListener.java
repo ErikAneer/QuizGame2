@@ -12,11 +12,12 @@ public class ServerListener {
                     System.out.println("Server Listener up and running.");
                     ServerSocket serverSocket = new ServerSocket(44444);
                     ActivePlayers activePlayersList = new ActivePlayers();
+                    QuestionCollection questionCollection =  new QuestionCollection();
                     
                     while (true) {
                              try {
                                        final Socket socketToClient = serverSocket.accept();
-                                       PlayerThread playerThread = new PlayerThread(socketToClient, activePlayersList);
+                                       PlayerThread playerThread = new PlayerThread(socketToClient, activePlayersList, questionCollection);
                                        playerThread.start();
                                        System.out.println("Player thread created.");
                              }

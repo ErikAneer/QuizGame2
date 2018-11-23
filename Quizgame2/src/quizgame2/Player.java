@@ -1,7 +1,6 @@
 
 package quizgame2;
 
-import java.io.BufferedReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -12,13 +11,12 @@ public class Player {
         private boolean isAvailable = true;
         private int points;
         private ObjectOutputStream oos;
-//        private ObjectInputStream ois;
-        private BufferedReader in;
+        private ObjectInputStream ois;
         
 
-        Player(ObjectOutputStream oos, BufferedReader in)  {
+        Player(ObjectOutputStream oos, ObjectInputStream ois)  {
 //                this.playerName = playerName;
-                this.in = in;
+                this.ois = ois;
                 this.oos = oos;
 
         }
@@ -47,8 +45,8 @@ public class Player {
                 return oos;
         }
 
-        public BufferedReader getInputReader() {
-                return in;
+        public ObjectInputStream getInputStream() {
+                return ois;
         }
 
 }
