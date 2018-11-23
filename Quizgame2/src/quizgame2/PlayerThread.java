@@ -13,27 +13,31 @@ public class PlayerThread extends Thread {
                 
          private Socket clientSocket;
          ActivePlayers activePlayersList;
+         QuestionCollection questionCollection;
+        
    
-         public PlayerThread(Socket clientSocket, ActivePlayers activePlayersList) {
+         public PlayerThread(Socket clientSocket, ActivePlayers activePlayersList, QuestionCollection questionCollection) {
                     this.clientSocket = clientSocket;
-                    this.activePlayersList = activePlayersList;          
+                    this.activePlayersList = activePlayersList;         
+                    this.questionCollection = questionCollection;
          }
          @Override
          public void run() {
              
                   try (     
                            ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-//                           ObjectInputStream ois = new ObjectInputStream((clientSocket.getInputStream())); // Använd istället för BR?
-                            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));)
+                           ObjectInputStream ois = new ObjectInputStream((clientSocket.getInputStream())); 
+                           )
                          
 
                   {
                            PlayerProtocol p = new PlayerProtocol();
-                           Player player = new Player(oos, in);
+                           Player player = new Player(oos, ois);
                            String inputLine;
                            
-                           while ((inputLine =  in.readLine()) != null) {
-                                    p.processInput(inputLine, activePlayersList, oos, in);
+                           
+                           while ((inputLine = (String) ois.readObject()) != null ) {
+//                                    p.processInput(inputLine, activePlayersList, oos, ois);
                            }  // end while
                   }  
                   catch (Exception e) {

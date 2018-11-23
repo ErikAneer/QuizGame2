@@ -1,10 +1,9 @@
 
 package quizgame2;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 
 
 public class PlayerProtocol {
@@ -27,7 +26,7 @@ public class PlayerProtocol {
           private int completedQuestions;
           ActivePlayers activePlayersList;
         
-         public void processInput(String input, ActivePlayers activePlayersList, ObjectOutputStream oos, BufferedReader in) {
+         public void processInput(String input, ActivePlayers activePlayersList, ObjectOutputStream oos, ObjectInputStream ois) {
                     
                     String output ="";
                    
@@ -41,11 +40,11 @@ public class PlayerProtocol {
                               if (input.matches("NEDKOPPLAD")) {
 //                                        d.removeUser(p);
 //                                        p.close();
-                                        try {
-                                                   in.close();
-                                        } catch (IOException ex) {
-                                                    ex.printStackTrace();
-                                        }
+//                                        try {
+////                                                   in.close();
+////                                        } catch (IOException ex) {
+////                                                    ex.printStackTrace();
+////                                        }
                               }
                               else {
 //                                        d.sendMessageToAll(input); 
