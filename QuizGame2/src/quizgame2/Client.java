@@ -1,109 +1,38 @@
 
 package quizgame2;
+package quizgame2;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-public class Client extends Application  {
+public class Client   {
 
     InetAddress ipAdress = InetAddress.getLocalHost();
-    
-    Stage window;
+    int socket = 55555;
 
-    @Override
+    public Client() throws UnknownHostException {
 
-    public void start(Stage primaryStage) throws UnknownHostException {
-
-        window=primaryStage;
-
-
-    }
-    public Client() throws UnknownHostException{
-
-
-        try (Socket socket = new Socket(ipAdress, 55555);
-//             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream()); // Använda istället för PrintWriter?
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());  
+        try (   Socket socketToServer = new Socket(ipAdress, socket);
+                ObjectOutputStream oos = new ObjectOutputStream(socketToServer.getOutputStream());
+                ObjectInputStream ois = new ObjectInputStream(socketToServer.getInputStream());
         ) {
-            
-            Object fromServer;
-            String messageFromClient;
+
+            String messageFromClient;  // behövs alls?
             String messageFromServer;
-            
-            //        window.setScene(new StartScene); // denna scen ska fråga efter spelar namn och skicka svaret till servern.
+            ClientGUIFactory guiFactory = new ClientGUIFactory(oos);
 
-
-
-                 while ((fromServer = ois.readObject()) != null) {
-                     
-                       if (fromServer instanceof Initiator) {
-                                                        System.out.println("Uppkopplad mot servern.");
-                                                        System.out.println("Server: Vem vill du kolla upp?");
-                                                }
-                       else if (fromServer instanceof Response ) { // Vilka typer av objekt kan komma? Question. Category? Skapa Response-klass för väntaskärmar?
-                                                          if (!((Response) fromServer).getSuccess()) {
-                                                                System.out.println("Personen finns inte i databasen.");
-                                                          }
-                                                          else {
-                                                                    System.out.println("Server: " + ((Response) fromServer).getPerson().getAddress());
-                                                                    System.out.println("Server: Vem vill du kolla upp?");
-                                                            }
-                                                 }   
-                
-                        if(messageFromServer.equalsIgnoreCase("Väntar på kategori från motståndare")){
-            //                    new WaitGui(messageFromServer);
-                                messageFromClient = "";
-                                out.write(messageFromClient);
-
-                        }
-                        if (messageFromServer.substring(0, 1).trim().equalsIgnoreCase("1")) { // Skapa välja kategori.
-                                    /*
-                                    new ChooseCategoryGui(objectOutputStream, messageFromServer); // OBS! Splitta inkommande sträng i GUI på underscore! 
-                                    primaryStage.setScene(ChooseCategoryGUI);
-                                    primaryStage.show();
-                                    */
-                        }
-                        if (messageFromServer.substring(0, 1).trim().equalsIgnoreCase("2")) { // Skapa fråga
-                                    /*
-                                    new Questiongui(objectOutputStream, messageFromServer);
-                                    primaryStage.setScene(Questiongui); 
-                                    primaryStage.show();
-                                    */
-                        }
-
-                        if (messageFromServer.substring(0, 1).trim().equalsIgnoreCase("3")) { // Skapa scen mellan ronder            
-                                    /*
-                                    new WaitBetweenRoundsGui(messageFromServer);                                   
-                                    primaryStage.setScene(WaitBetweenRoundsGui); 
-                                    primaryStage.show();
-                                    */
-                        }
-                        if (messageFromServer.substring(0, 1).trim().equalsIgnoreCase("4")) { // Skapa scen spel klart.                    
-                                    /*
-                                    new ResultGui(objectOutputStream, messageFromServer);
-                                    primaryStage.setScene(ResultGui); 
-                                    primaryStage.show();
-                                    */
-                        }
-                
-//                messageFromClient = scan.nextLine();
-//                objectOutputStream.writeObject(messageFromClient);
+            while(true) {
+                if ((messageFromServer = (String) ois.readObject()) != null) {
+                    System.out.println(messageFromServer);
+                    guiFactory.handleInputFromServer(messageFromServer);
+                }
             }
+        } catch(IOException e){
+            e.printStackTrace();
 
-        }catch(IOException e){
-            System.out.println("Error: " + e.getMessage());
-        }catch (ClassNotFoundException e){
-            e.getMessage();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
-
-
-
-
     }
-}
+}}
